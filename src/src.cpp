@@ -22,20 +22,29 @@ public:
     
     Book() : title("Undefined"), author("Undefined"), year_published(0) {};
 
-    friend std::ostream& operator<< (std::ostream &output, const Book &book) {
-        output << "Titlu: " << book.title << "\nAuthor: " << book.author << "\nYear: " << book.year_published << "\n"; 
-        return output;
+    void printBook () {
+        std::cout << "Titlu: " << title << "\nAuthor: " << author << "\nYear: " << year_published << "\n"; 
     }
 
     bool operator==(const Book& book) const {
-    return
-       title == book.title
-       && author == book.author
-       && year_published == book.year_published
-    ;
-}
+    return title == book.title && author == book.author && year_published == book.year_published;
+    }
 
-    // Destructor
+    Book(const Book& book) {
+        title = book.title;
+        author = book.author;
+        year_published = book.year_published;
+    }
+
+    Book& operator=(const Book& book)
+	{
+        title = book.title;
+        author = book.author;
+        year_published = book.year_published;
+
+		return *this;
+	}
+
 	~Book() {
         std::cout << title << " - Book - Destructor\n";
 	}
@@ -47,6 +56,9 @@ class Library {
 private:
     std::string name;
     std::list<Book> books;
+
+    Library& operator=(const Library& library);
+    Library(const Library&);
 
 public:
     Library(const std::string& name) :
@@ -73,31 +85,18 @@ public:
         return books;
     }
 
-    friend std::ostream& operator<< (std::ostream &output, const Library &library) {
-        output << "Name: " << library.name << "\n";
-        output << "Books:\n";
+    void printLibrary () {
+        std::cout << "Name: " << name << "\n";
+        std::cout << "Books:\n";
 
-        for(Book b : library.books) {
-            output << b;
+        for(Book b : books) {
+            b.printBook();
         }
-
-        return output;
     }
 
-    // Destructor
 	~Library()
 	{
         std::cout << name << " - Library - Destructor\n";
-	}
-
-    // Copy assigment operator
-	Library& operator = (const Library& library) {
-
-        this->name = library.name;
-        this->books = library.books;
-
-        std::cout << "Library - Copy Assignment Operator\n";
-		return *this;
 	}
 };
 
@@ -108,19 +107,17 @@ int main() {
     Library library("The Library");
     Book book1("Harry Potter and The Goblet of Fire", 
     "J.K. Rowling", 2000);
-    Book book2("The Oddysey", "Homer", 1614);
+    Book book2("The Odyssey", "Homer", 1614);
     Book book3("Pebble in the Sky", "Isaac Asimov", 1950);
     Book book4("Circe", "Madeline Miller", 2018);
-
-    book1 = book3;
 
     library.addBook(book1);
     library.addBook(book2);
     library.addBook(book3);
 
 
+    library.printLibrary();
 
-    std::cout << library;
     return 0;
 }
 
