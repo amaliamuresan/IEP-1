@@ -1,5 +1,8 @@
 #include<iostream>
 
+#ifndef BOOK_H
+#define BOOK_H
+
 class Book {
 
 protected:
@@ -16,3 +19,4 @@ public:
     virtual void print();
 
 };
+#endif
